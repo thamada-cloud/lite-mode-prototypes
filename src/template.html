@@ -191,6 +191,15 @@ img { display: block; max-width: 100%; }
 .homebar { height: 21px; display: grid; place-items: center; }
 .homebar i { width: 134px; height: 5px; border-radius: 3px; background: #000; }
 
+/* Shadows, matched to the Figma screens: the library's standard card shadow (0 1 3, black 12%) on
+   tiles, cards, chips and buttons, and the Top Sheet's 0 3 5 shadow on Lite's now playing sheet. */
+:root { --shadow: 0 1px 3px rgba(0,0,0,.12); }
+.t56, .t66, .emptypreset, .chip, .dial, .wide, .card120 img, .trend .card img, .mini img, .mini .pp, .art, .ctrls .big, .tile108 img { box-shadow: var(--shadow); }
+.trend .card { overflow: visible; }
+.trend .card img { border-radius: 6px 0 0 6px; }
+.trend .num svg { filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.12)); }
+.sheet { box-shadow: 0 3px 5px rgba(0,0,0,.12); }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
