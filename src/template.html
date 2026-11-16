@@ -1,0 +1,400 @@
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one iPhone-sized device centered on a quiet backdrop, label strip above it. Single light theme, matching the light Figma screens. */
+:root {
+  --backdrop: #dde1e4;
+  --page: #f6f8f9;
+  --sheet: #ffffff;
+  --brand: #c6002b;
+  --ink: #27292d;
+  --ink-2: #3f4447;
+  --muted: #717276;
+  --track: #e6eaed;
+  --edge: #a9afb2;
+  --link: #0055b7;
+  --ios-off: rgba(120,120,128,.16);
+  --ios-on: #34c759;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--backdrop); color: var(--ink); font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+img { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+
+.stage { height: 100%; display: flex; flex-direction: column; align-items: center; padding-block: 16px; gap: 12px; }
+.label { width: min(414px, 100%); display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.label b { font-size: 15px; font-weight: 700; letter-spacing: .01em; }
+.label span { font-size: 13px; color: var(--ink-2); }
+
+.device {
+  position: relative; width: min(414px, 100%); flex: 1; max-height: 896px; min-height: 0;
+  background: var(--page); border-radius: 44px; overflow: hidden;
+  box-shadow: 0 0 0 10px #111, 0 24px 60px rgba(0,0,0,.25);
+  display: flex; flex-direction: column;
+  margin-block: 10px;
+}
+/* On a phone the prototype fills the screen like the real app; the app's own 16px content padding is the gutter. */
+@media (max-width: 480px) {
+  body { padding-left: 0; padding-right: 0; background: var(--page); }
+  .stage { padding-block: 0; gap: 0; }
+  .label { display: none; }
+  .device { width: 100%; max-height: none; border-radius: 0; box-shadow: none; margin-block: 0; }
+  .status { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+}
+@media (max-width: 400px) {
+  .device .sechead { gap: 6px; }
+  .device .sechead h2 { font-size: 18px; }
+  .device .chip { padding: 0 8px; gap: 2px; }
+  .device .chip.loc svg { display: none; }
+}
+
+/* Header */
+.top { flex: none; background: var(--page); transition: background .2s; z-index: 3; }
+.device[data-view="lite"] .top { background: var(--sheet); }
+.status { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px 0 40px; font-weight: 600; font-size: 16px; }
+.status svg { display: block; }
+.nav { height: 44px; display: flex; align-items: center; padding: 0 16px 0 14px; gap: 12px; }
+.nav .logo { flex: none; }
+.nav .spacer { flex: 1; }
+.iconbtn { width: 32px; height: 32px; display: grid; place-items: center; color: var(--ink); }
+.livetoggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink); margin-right: 4px; }
+.ios { width: 40px; height: 20px; border-radius: 100px; background: var(--ios-off); padding: 2px; transition: background .2s; }
+.ios i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 3px 1px rgba(0,0,0,.06), 0 3px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.04); transition: transform .2s; }
+.livetoggle[aria-checked="true"] .ios { background: var(--ios-on); }
+.livetoggle[aria-checked="true"] .ios i { transform: translateX(20px); }
+
+/* Views */
+.views { position: relative; flex: 1; min-height: 0; }
+.view { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; transition: opacity .15s; }
+.view::-webkit-scrollbar { display: none; }
+.view.fading { opacity: 0; }
+.col { display: flex; flex-direction: column; gap: 16px; padding: 0 16px 24px; }
+
+/* Controls */
+.seg { padding: 6px 0; }
+.seg .track { position: relative; height: 36px; border-radius: 999px; background: var(--track); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; }
+.seg .track::after { content: ""; position: absolute; inset: 0; border-radius: 999px; border: 1px solid rgba(169,175,178,.4); pointer-events: none; }
+.seg .pill { position: absolute; top: 4px; left: 4px; height: 28px; width: calc(50% - 6px); border-radius: 999px; background: var(--brand); box-shadow: 1px 1px 3px rgba(39,41,45,.12); transition: transform .25s cubic-bezier(.3,.7,.2,1); }
+.seg[data-state="lite"] .pill { transform: translateX(calc(100% + 4px)); }
+.seg button { position: relative; z-index: 1; height: 28px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--ink-2); transition: color .2s; }
+.seg[data-state="discover"] .b-discover, .seg[data-state="lite"] .b-lite { color: #fff; }
+.seg.fix { padding: 4px 0; }
+.seg.fix .track { height: 40px; gap: 6px; padding: 6px; box-shadow: inset 0 1px 4px rgba(0,0,0,.10); }
+.seg.fix .track::after { display: none; }
+.seg.fix .pill { top: 6px; left: 6px; width: calc(50% - 9px); }
+.seg.fix[data-state="lite"] .pill { transform: translateX(calc(100% + 6px)); }
+
+.tog { position: relative; height: 44px; border-radius: 999px; background: var(--sheet); display: flex; align-items: center; justify-content: center; gap: 12px; }
+.tog::after { content: ""; position: absolute; inset: 0; border-radius: 999px; border: 1px solid rgba(169,175,178,.4); pointer-events: none; }
+.tog .lbl { font-size: 15px; font-weight: 500; color: var(--ink-2); padding: 12px 4px; }
+.tog .sw { width: 51px; height: 31px; border-radius: 999px; background: var(--edge); padding: 2px; transition: background .25s; }
+.tog .sw i { display: block; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 1px 1px 3px rgba(39,41,45,.12), 0 2px 6px rgba(0,0,0,.12); transition: transform .25s cubic-bezier(.3,.7,.2,1); }
+.tog[data-state="lite"] .sw { background: var(--brand); }
+.tog[data-state="lite"] .sw i { transform: translateX(20px); }
+.noanim, .noanim * { transition: none !important; }
+
+/* Discover */
+.banner { width: 100%; aspect-ratio: 382 / 151; border-radius: 8px; object-fit: cover; }
+.ad { width: 320px; max-width: 100%; aspect-ratio: 320 / 50; margin: 0 auto; }
+.sec { display: flex; flex-direction: column; gap: 12px; }
+.sechead { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+.sechead { flex-wrap: wrap; }
+.sechead h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1; letter-spacing: -.01em; white-space: nowrap; }
+.sechead .ico { color: var(--ink); display: flex; }
+.chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: 999px; background: var(--sheet); color: var(--link); font-size: 12px; font-weight: 600; box-shadow: 0 1px 2px rgba(39,41,45,.06); white-space: nowrap; }
+.row { display: flex; gap: 12px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 4px; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding-inline: 16px; }
+.row::-webkit-scrollbar { display: none; }
+.row > * { flex: none; scroll-snap-align: start; }
+.t56 { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
+.t66 { width: 66px; height: 66px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
+.round { border-radius: 50%; }
+.dial { width: 142px; min-height: 76px; background: var(--sheet); border-radius: 8px; padding: 10px 8px 8px; display: flex; flex-direction: column; gap: 2px; position: relative; text-align: left; box-shadow: 0 1px 2px rgba(39,41,45,.06); }
+.dial b { font-size: 14px; font-weight: 600; }
+.dial span { font-size: 12px; color: var(--ink-2); padding-right: 28px; line-height: 1.3; }
+.dial .play { position: absolute; right: 8px; bottom: 8px; padding: 0; display: flex; }
+.wide { height: 36px; border-radius: 999px; background: var(--sheet); display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--brand); box-shadow: 0 1px 2px rgba(39,41,45,.06); width: 100%; }
+.wide.ink { color: var(--ink); width: auto; padding: 0 20px; align-self: center; }
+.pills { display: flex; gap: 8px; }
+.pills button { height: 36px; padding: 0 16px; border-radius: 999px; background: var(--sheet); font-size: 14px; font-weight: 600; box-shadow: 0 1px 2px rgba(39,41,45,.06); }
+.trend { display: grid; grid-template-columns: 40px 56px 1fr; gap: 12px; align-items: center; text-align: left; }
+.trend .num { width: 40px; height: 40px; border-radius: 50%; background: var(--sheet); display: grid; place-items: center; font-weight: 700; font-size: 16px; color: var(--brand); }
+.trend img, .trend .cover { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; }
+.trend p { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.trend small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.card120 { width: 120px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.card120 img, .card120 .cover { width: 120px; height: 120px; border-radius: 6px; object-fit: cover; }
+.card120.artist img, .card120.artist .cover { border-radius: 50%; }
+.card120 b { font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card120 span { font-size: 12px; color: var(--muted); margin-top: -6px; }
+.cover { display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; color: #fff; font-weight: 800; letter-spacing: -.01em; line-height: 1.05; font-size: 15px; text-transform: none; background: var(--c, #333); }
+.cover.sm { font-size: 9px; padding: 6px; }
+.cover em { font-style: normal; font-size: .62em; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; margin-bottom: 4px; }
+.artist .cover { align-items: center; justify-content: center; font-size: 30px; text-align: center; }
+
+/* Lite */
+.sheet { background: var(--sheet); border-radius: 0 0 24px 24px; box-shadow: 0 4px 12px rgba(39,41,45,.08); padding: 0 16px 16px; display: flex; flex-direction: column; gap: 16px; }
+.art { width: min(316px, 100%); aspect-ratio: 1; margin: 0 auto; border-radius: 6px; object-fit: cover; }
+.meta { display: flex; align-items: center; gap: 8px; }
+.meta div { flex: 1; min-width: 0; }
+.meta h3 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta p { margin: 2px 0 0; font-size: 16px; color: var(--ink-2); }
+.thumb { width: 34px; height: 34px; display: grid; place-items: center; color: var(--ink); }
+.thumb.on { color: var(--brand); }
+.scrub { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.scrub .bar { flex: 1; height: 3px; border-radius: 2px; background: var(--track); position: relative; }
+.scrub .bar i { position: absolute; inset: 0 auto 0 0; background: var(--ink); border-radius: 2px; }
+.ctrls { display: flex; align-items: center; justify-content: center; gap: 28px; }
+.ctrls .big { width: 56px; height: 56px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.tabs { display: flex; justify-content: space-between; padding: 8px 16px 0; }
+.tabs button { font-size: 16px; font-weight: 600; padding: 10px 6px 12px; color: var(--ink); position: relative; }
+.tabs button[aria-selected="false"] { color: var(--ink-2); font-weight: 500; }
+.tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 4px; height: 2px; background: var(--brand); border-radius: 2px; }
+.tile108 { width: 108px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.tile108 img, .tile108 .cover { width: 108px; height: 108px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
+.tile108 .round { border-radius: 50%; }
+.tile108 b { font-size: 14px; font-weight: 600; line-height: 1.25; }
+.tile108.now b { color: var(--brand); }
+.addtile { width: 108px; height: 108px; border-radius: 6px; border: 1.5px dashed var(--edge); display: grid; place-items: center; color: var(--ink-2); }
+
+/* Bottom */
+.bottom { flex: none; background: var(--sheet); z-index: 3; box-shadow: 0 -1px 0 rgba(39,41,45,.06); }
+.mini { height: 63px; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 4px; position: relative; }
+.device[data-view="lite"] .mini { display: none; }
+.mini img { width: 52px; height: 52px; object-fit: cover; }
+.mini .txt { flex: 1; min-width: 0; font-size: 12px; line-height: 1.4; }
+.mini .txt b, .mini .txt span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini .txt b { font-weight: 600; }
+.mini .prog { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--brand); }
+.mini .pp { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; }
+.tabbar { height: 56px; display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid rgba(39,41,45,.06); }
+.tabbar div { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; color: var(--muted); }
+.tabbar div.on { color: var(--brand); font-weight: 600; }
+.homebar { height: 21px; display: grid; place-items: center; }
+.homebar i { width: 134px; height: 5px; border-radius: 3px; background: #000; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="stage">
+  <div class="label"><b>__NAME__</b><span>__HINT__</span></div>
+  <div class="device" id="device" data-view="discover">
+    <div class="top">
+      <div class="status">
+        <span>9:41</span>
+        <svg width="72" height="12" viewBox="0 0 72 12" aria-hidden="true"><g fill="#000"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 3.2a9.6 9.6 0 0 1 12.8 0l-1.3 1.4a7.7 7.7 0 0 0-10.2 0zM32.4 5.9a6 6 0 0 1 8 0l-1.3 1.4a4.1 4.1 0 0 0-5.4 0zM34.8 8.6a2.4 2.4 0 0 1 3.2 0L36.4 10.4z"/><rect x="47" y=".5" width="22" height="11" rx="3" fill="none" stroke="#000" stroke-opacity=".4"/><rect x="49" y="2.5" width="18" height="7" rx="1.5"/><path d="M70.5 4v4a2 2 0 0 0 0-4z" fill-opacity=".4"/></g></svg>
+      </div>
+      <div class="nav">
+        <svg class="logo" width="112" height="24" viewBox="14 10 112 24" aria-label="iHeart"><g id="logo"></g></svg>
+        <span class="spacer"></span>
+        <button class="livetoggle" id="liveToggle" role="switch" aria-checked="false" hidden><span>Lite</span><span class="ios"><i></i></span></button>
+        <span class="iconbtn" data-icon="bell" aria-label="Notifications"></span>
+        <span class="iconbtn" data-icon="settings" aria-label="Settings"></span>
+      </div>
+    </div>
+
+    <div class="views">
+      <div class="view" id="v-discover"><div class="col" id="discoverCol"></div></div>
+      <div class="view" id="v-lite" hidden><div id="liteCol"></div></div>
+    </div>
+
+    <div class="bottom">
+      <div class="mini">
+        <img src="img/mini.png" alt="">
+        <div class="txt"><span>Taylor Swift Radio</span><b>hate that i made you love me</b><span>Ariana Grande</span></div>
+        <span class="iconbtn" data-icon="grid" style="width:40px;height:40px"></span>
+        <button class="pp" data-pp aria-label="Pause"></button>
+        <i class="prog"></i>
+      </div>
+      <div class="tabbar">
+        <div class="on"><span data-icon="home"></span>Home</div>
+        <div><span data-icon="search"></span>Search</div>
+        <div><span data-icon="radio"></span>Radio</div>
+        <div><span data-icon="podcasts"></span>Podcasts</div>
+        <div><span data-icon="playlists"></span>Playlists</div>
+      </div>
+      <div class="homebar"><i></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const VARIANT = "__VARIANT__"; // live | e2 | fix2 | f
+
+const I = {
+  bell: '<svg width="27" height="26" viewBox="0 0 27 26"><path d="M18 12.75C18 9.68 16.36 7.11 13.5 6.43V5.75C13.5 4.92 12.83 4.25 12 4.25C11.17 4.25 10.5 4.92 10.5 5.75V6.43C7.63 7.11 6 9.67 6 12.75L6 17.75L4 19.75L4 20.75L20 20.75V19.75L18 17.75L18 12.75ZM12 23.75C12.14 23.75 12.27 23.74 12.4 23.71C13.05 23.57 13.58 23.13 13.84 22.53C13.94 22.29 13.99 22.03 13.99 21.75L9.99 21.75C10 22.85 10.89 23.75 12 23.75Z" fill="currentColor"/><circle cx="20" cy="7" r="6.5" fill="#C6002B" stroke="#fff"/><path d="M19.7148 10V4.7749H19.6401L18.0625 5.89111V4.82324L19.7192 3.65869L20.8486 3.65869V10H19.7148Z" fill="#fff"/></svg>',
+  settings: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.64 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.17-1.65c.2-.15.25-.42.12-.64l-2.06-3.46c-.12-.22-.4-.3-.63-.22l-2.56 1c-.53-.4-1.11-.73-1.74-.98l-.39-2.65A.5.5 0 0 0 14.06 2H9.95a.5.5 0 0 0-.5.42l-.4 2.65c-.62.25-1.2.59-1.73.98l-2.56-1a.5.5 0 0 0-.63.22L2.07 8.73c-.13.22-.07.49.12.64l2.17 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.17 1.65c-.2.15-.25.42-.12.64l2.06 3.46c.12.22.4.3.63.22l2.56-1c.53.4 1.11.73 1.74.98l.39 2.65c.03.24.25.42.5.42h4.11c.26 0 .47-.18.5-.42l.4-2.65c.62-.25 1.2-.59 1.73-.98l2.56 1c.24.09.5 0 .63-.22l2.06-3.46c.13-.22.07-.49-.12-.64l-2.17-1.65ZM12 15.5c-1.98 0-3.6-1.57-3.6-3.5s1.62-3.5 3.6-3.5 3.6 1.57 3.6 3.5-1.62 3.5-3.6 3.5Z" fill="currentColor"/></svg>',
+  preset: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6a2 2 0 0 1 2-2h4.67v6.67H4zM13.33 4H18a2 2 0 0 1 2 2v4.67h-6.67zM4 13.33h6.67V20H6a2 2 0 0 1-2-2zM13.33 13.33H20V18a2 2 0 0 1-2 2h-4.67z"/></svg>',
+  edit: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.46V20.5c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1a.49.49 0 0 0-.15.36ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>',
+  location: '<svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M13.9 2.1c.2.2.25.5.13.75L8.88 13.71a.67.67 0 0 1-1.25-.12L6.59 9.4 2.4 8.36a.67.67 0 0 1-.12-1.25L13.14 1.96c.25-.12.56-.07.76.13ZM4.54 7.51l2.76.7c.24.05.43.24.49.48l.69 2.76 3.54-7.49-7.48 3.55Z" fill="currentColor"/></svg>',
+  chevron: '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M10.77 5.85 8 8.63 5.22 5.85a.71.71 0 0 0-1.01 1.01L7.5 10.14c.28.28.73.28 1.01 0l3.29-3.28a.71.71 0 0 0-1.02-1.01Z" fill="currentColor"/></svg>',
+  play: '<svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#C6002B"/><path d="M10 15.06V8.94c0-.36.41-.57.7-.35l4.08 3.06c.24.18.24.52 0 .7L10.7 15.41c-.29.22-.7.01-.7-.35Z" fill="#fff"/></svg>',
+  scan: '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1.33" y="4.6" width="1.1" height="6.8" rx=".55"/><rect x="3.55" y="6.3" width="1.1" height="3.4" rx=".55"/><rect x="5.5" y="5.2" width="1.1" height="5.6" rx=".55"/><rect x="7.45" y="4.1" width="1.1" height="7.8" rx=".55"/><rect x="7.45" y="1.33" width="1.1" height="1.67" rx=".55"/><rect x="7.45" y="13" width="1.1" height="1.67" rx=".55"/><rect x="9.39" y="5.2" width="1.1" height="5.6" rx=".55"/><rect x="11.33" y="6.3" width="1.1" height="3.4" rx=".55"/><rect x="13.55" y="4.6" width="1.1" height="6.8" rx=".55"/></svg>',
+  grid: '<svg width="40" height="40" viewBox="0 0 40 40" fill="currentColor"><path d="M9.33 12A2.67 2.67 0 0 1 12 9.33h6.22v8.89H9.33zM21.78 9.33H28A2.67 2.67 0 0 1 30.67 12v6.22h-8.89zM9.33 21.78h8.89v8.89H12A2.67 2.67 0 0 1 9.33 28zM21.78 21.78h8.89V28A2.67 2.67 0 0 1 28 30.67h-6.22z"/></svg>',
+  pause: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="5" width="3.5" height="14" rx="1.75"/><rect x="13.5" y="5" width="3.5" height="14" rx="1.75"/></svg>',
+  playArrow: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.8v12.4c0 .8.86 1.28 1.53.86l9.7-6.2a1 1 0 0 0 0-1.72l-9.7-6.2C8.86 4.52 8 5 8 5.8Z"/></svg>',
+  home: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.73 10.05 12.54 2.17c-.27-.23-.81-.23-1.08 0l-9.19 7.88c-.18.15-.27.3-.27.45v10.89c0 .3.36.61.81.61h18.38c.45 0 .81-.31.81-.61V10.5c0-.15-.09-.3-.27-.45Z"/></svg>',
+  search: '<svg width="24" height="24" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M14.28 16.17a7.4 7.4 0 0 1-3.77 1.02C6.36 17.19 3 13.79 3 9.6S6.36 2 10.5 2s7.5 3.4 7.5 7.6c0 1.91-.7 3.66-1.85 5l4.55 5.36a1.24 1.24 0 0 1-1.85 1.6l-4.58-5.4Zm.8-6.57c0 2.56-2.04 4.63-4.57 4.63S5.93 12.15 5.93 9.6s2.05-4.64 4.58-4.64 4.57 2.08 4.57 4.64Z" fill="currentColor"/></svg>',
+  radio: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.86 16.95a.43.43 0 0 1-.6-.09.44.44 0 0 1 .11-.63 7.2 7.2 0 0 0 2.93-5.52c0-3.79-3.22-6.86-7.2-6.86S4.9 6.93 4.9 10.71c0 2.17 1.06 4.11 2.71 5.37.21.16.25.45.08.64a.45.45 0 0 1-.6.06A7.6 7.6 0 0 1 4 10.71C4 6.45 7.63 3 12.1 3s8.1 3.45 8.1 7.71a7.6 7.6 0 0 1-3.34 6.24Z"/><path d="M15.54 14.68a.8.8 0 0 1-1.12-.17c-.33-.41-.18-1 .2-1.35a3.33 3.33 0 0 0 1.08-2.45c0-1.89-1.61-3.43-3.6-3.43s-3.6 1.54-3.6 3.43c0 .93.39 1.77 1.02 2.39.38.38.51.99.15 1.38a.8.8 0 0 1-1.1.12 5.06 5.06 0 0 1-1.87-3.9c0-2.84 2.42-5.14 5.4-5.14s5.4 2.3 5.4 5.14c0 1.6-.76 3.03-1.96 3.97Z"/><path d="M13.9 10.71c0 .8-.57 1.47-1.35 1.67v3.48h.15c.13 0 .26.06.34.15l3.83 4.29c.25.28.04.7-.34.7H7.67c-.38 0-.59-.42-.34-.7l3.83-4.29a.45.45 0 0 1 .34-.15h.15v-3.48a1.72 1.72 0 0 1-1.35-1.67c0-.94.8-1.71 1.8-1.71s1.8.77 1.8 1.71Z"/></svg>',
+  podcasts: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9.63 18.54a.98.98 0 0 1 1.97 0h1.96c.54 0 .98.44.98.98V21H6.69v-1.48c0-.54.44-.98.98-.98h1.96Z"/><path d="M13.37 3.18c2.66.71 4.29 3.29 3.63 5.76l-1.24 4.7c-.66 2.48-3.34 3.9-6 3.19A5.08 5.08 0 0 1 6 12.57l2.7.72a.83.83 0 0 0 .43-1.6l-2.96-.79.43-1.6 2.96.79a.83.83 0 0 0 .43-1.6l-2.97-.8.35-1.31.1-.3 2.81.75a.83.83 0 0 0 .43-1.6l-2.37-.64c1.17-1.31 3.11-1.91 5.03-1.4Z"/></svg>',
+  playlists: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16.3 3H4.33a1.32 1.32 0 1 0 0 2.64H16.3a1.32 1.32 0 1 0 0-2.64ZM16.3 8.29H4.33a1.32 1.32 0 1 0 0 2.64H16.3a1.32 1.32 0 1 0 0-2.64ZM4.33 13.58h6.65a1.32 1.32 0 1 1 0 2.64H4.33a1.32 1.32 0 1 1 0-2.64ZM14.97 20.34v-5.6c0-.51.56-.83 1.01-.58l4.7 2.8c.43.27.43.89 0 1.14l-4.7 2.8c-.45.27-1.01-.05-1.01-.56Z"/></svg>',
+  thumbDown: '<svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor"><path fill-rule="evenodd" d="m10.97 17.43-1.08 5.21c-.11.57.06 1.15.47 1.56.67.66 1.74.66 2.4-.01l6.29-6.3c.42-.42.66-1 .66-1.6V4.91c0-1.25-1.02-2.27-2.27-2.27H7.21c-.91 0-1.73.55-2.08 1.38L1.42 12.67c-.97 2.26.68 4.76 3.13 4.76h6.42Zm2.8-2.28-1.26 6.06 4.92-4.93V4.91H7.22L3.51 13.57c-.32.75.23 1.58 1.04 1.58h9.22Z"/><path d="M23.89 2.64c-1.26 0-2.28 1.02-2.28 2.27v9.1a2.28 2.28 0 0 0 4.55 0v-9.1c0-1.25-1.02-2.27-2.27-2.27Z"/></svg>',
+  thumbUp: '<svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor"><path fill-rule="evenodd" d="m16.33 9.9 1.08-5.21c.11-.57-.06-1.15-.47-1.56a1.7 1.7 0 0 0-2.4.01L8.25 9.44c-.42.42-.66 1-.66 1.6v11.37c0 1.25 1.02 2.27 2.28 2.27h10.22c.91 0 1.73-.55 2.08-1.38l3.71-8.65c.97-2.26-.68-4.76-3.13-4.76h-6.42Zm-2.8 2.27 1.26-6.06-4.92 4.93v11.37h10.22l3.7-8.66c.33-.75-.22-1.58-1.03-1.58h-9.22Z"/><path d="M3.41 24.69c1.26 0 2.28-1.02 2.28-2.28v-9.1a2.28 2.28 0 0 0-4.55 0v9.1c0 1.26 1.02 2.28 2.27 2.28Z"/></svg>',
+  savePlaylist: '<svg width="36" height="36" viewBox="0 0 43 43" fill="currentColor"><path d="M23.08 15.98H5.33a1.78 1.78 0 0 0 0 3.55h17.75a1.78 1.78 0 0 0 0-3.55Zm0-7.1H5.33a1.78 1.78 0 0 0 0 3.55h17.75a1.78 1.78 0 0 0 0-3.55Zm8.87 14.2v-5.33a1.78 1.78 0 0 0-3.55 0v5.33h-5.33a1.78 1.78 0 0 0 0 3.55h5.33v5.32a1.78 1.78 0 0 0 3.55 0v-5.32h5.33a1.78 1.78 0 0 0 0-3.55h-5.33ZM5.33 26.63h10.65a1.78 1.78 0 0 0 0-3.55H5.33a1.78 1.78 0 0 0 0 3.55Z"/></svg>',
+  skip: '<svg width="36" height="36" viewBox="0 0 43 43" fill="currentColor"><path d="m13.58 30.26 10.34-7.29c1-.72 1-2.22 0-2.92l-10.34-7.31c-1.2-.82-2.83.02-2.83 1.47v14.58c0 1.45 1.63 2.3 2.83 1.47Zm15.09-17.72v17.92a1.79 1.79 0 0 0 3.58 0V12.54a1.79 1.79 0 0 0-3.58 0Z"/></svg>',
+  plus: '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M13 5a1 1 0 1 0-2 0v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6z"/></svg>'
+};
+document.getElementById('logo').outerHTML = '<g><path d="M50.84 16.99v15.07h-3.7V16.99h3.7Zm-1.85-5.49c1.2 0 2.19.99 2.19 2.19 0 1.2-.99 2.19-2.19 2.19a2.2 2.2 0 0 1-2.19-2.19c0-1.2.99-2.19 2.19-2.19Z"/><path d="M64.35 32.06v-8.15H56.4v8.15h-3.71V12.54h3.7v8.1h7.96v-8.1h3.7v19.52h-3.7Z"/><path d="M81.71 23.05c-.37-1.82-1.88-3.38-4.15-3.38-2.24 0-3.86 1.56-4.22 3.38h8.37Zm3.76 3.1H73.29c.39 1.67 2.11 3.15 4.22 3.15 1.57 0 2.79-.83 3.39-1.77h4.02c-1.07 3.04-4.04 4.97-7.41 4.97-4.51 0-8.19-3.44-8.19-7.99s3.7-7.96 8.24-7.96c4.46 0 8.11 3.51 8.11 7.96 0 .57-.08 1.07-.21 1.64Z"/><path d="M95.01 19.88c-2.56 0-4.62 2.1-4.62 4.63 0 2.55 2.06 4.66 4.62 4.66 2.58 0 4.61-2.11 4.61-4.66 0-2.52-2.03-4.63-4.61-4.63Zm4.61 9.76h-.05c-.83 1.4-2.5 2.86-5.03 2.86-4.41 0-8.01-3.41-8.01-7.99 0-4.55 3.6-7.96 8.01-7.96 2.37 0 3.99 1.22 5.03 2.63h.05v-2.19h3.7v15.07h-3.7v-2.42Z"/><path d="M105.02 16.99h3.7v2.08h.05c.78-1.32 1.9-2.52 3.83-2.52h.37v3.75h-.91c-1.77 0-3.21 1.38-3.34 3.12v8.64h-3.7V16.99Z"/><path d="M114.24 19.96v-2.97h1.36v-3.41h3.7v3.41h2.59v2.97h-2.59v7.91c0 .52.42.91.89.91h1.7v3.28h-1.7c-2.71 0-4.59-1.72-4.59-4.45v-7.65h-1.36Z"/><path fill="#C6002B" d="M40.86 18.74c0 2.12-1.15 4.21-3.41 6.22a.53.53 0 0 1-.7-.79c2.03-1.8 3.06-3.62 3.06-5.43v-.03c0-1.47-.92-3.2-2.1-3.93a.53.53 0 0 1 .56-.89c1.48.93 2.59 3 2.59 4.82v.03Zm-6.82 4.43a.53.53 0 0 1-.51-.92c1.22-.68 2.03-2 2.04-3.29a2.86 2.86 0 0 0-1.71-2.82.53.53 0 0 1 .49-.93 3.9 3.9 0 0 1 2.27 3.74v.02c0 1.65-1.04 3.34-2.58 4.2Zm-4.22-1.54a2.28 2.28 0 1 1 0-4.56 2.28 2.28 0 0 1 0 4.56Zm-3.51 1.34a.53.53 0 0 1-.72.2c-1.53-.86-2.57-2.55-2.58-4.2v-.02a3.9 3.9 0 0 1 2.27-3.74.53.53 0 0 1 .49.93 2.86 2.86 0 0 0-1.71 2.82c0 1.29.82 2.61 2.04 3.29.25.14.34.46.21.72Zm-3.38 1.95a.53.53 0 0 1-.74.04c-2.27-2-3.42-4.1-3.42-6.22v-.03c0-1.82 1.12-3.89 2.6-4.82a.53.53 0 0 1 .56.89c-1.18.74-2.1 2.46-2.1 3.93v.03c0 1.81 1.03 3.63 3.06 5.43.22.2.24.53.04.75Zm13.23-13.41c-2.63 0-4.98 1.39-6.34 3.42-1.36-2.03-3.71-3.42-6.34-3.42a7.6 7.6 0 0 0-7.59 7.57c0 2.66 1.68 4.57 3.44 6.34l6.88 6.49c.36.34.95.09.95-.41v-5.06a2.65 2.65 0 0 1 5.31 0v5.06c0 .5.59.75.95.41l6.88-6.49c1.76-1.77 3.45-3.68 3.45-6.34a7.6 7.6 0 0 0-7.59-7.57Z"/></g>';
+document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = I[el.dataset.icon]; });
+
+/* Shared content. Identical in all four prototypes. */
+const img = (f, alt='') => `<img src="img/${f}" alt="${alt}">`;
+const dialStations = [
+  ['106.7 Lite FM', "New York's Best Variety"], ['Z100 (100.3)', "New York's #1 Hit Music Station"],
+  ['103.5 KTU', 'The Beat of New York'], ['Power 105.1', "New York's Hip Hop and R&B"], ['107.5 WBLS', '#1 For R&B in New York']
+];
+/* iHeart Podcast Top 100, top seven */
+const podcasts = [
+  ['Stuff You Should Know', img('pod0.jpg')], ['Dateline NBC', img('pod1.jpg')], ['The Breakfast Club', img('pod2.jpg')],
+  ['Crime Junkie', img('pod3.jpg')], ['The Joe Rogan Experience', img('pod4.jpg')],
+  ['Artists on Artists on Artists on Artists', img('pod5.jpg')], ['The Dan Bongino Show', img('pod6.jpg')]
+];
+/* iHeart playlist directory, featured playlists */
+const playlists = [
+  ['2027 Grammy Nominations', img('pl0.jpg')], ['Newly Released', img('pl1.jpg')], ['Hits Now', img('pl2.jpg')],
+  ['Top 2026: Pop', img('pl3.jpg')], ['Jingle Ball Playlist', img('pl4.jpg')], ['Fresh Picks', img('pl5.jpg')], ['Top 2026: Country', img('pl6.jpg')]
+];
+const artists = [
+  ['Taylor Swift', img('art_taylorswift.jpg')], ['Ariana Grande', img('art_arianagrande.jpg')], ['Jonas Brothers', img('art_jonasbrothers.jpg')],
+  ['Sabrina Carpenter', img('art_sabrinacarpenter.jpg')], ['Bruno Mars', img('art_brunomars.jpg')], ['SZA', img('art_sza.jpg')], ['Benson Boone', img('art_bensonboone.jpg')]
+];
+const card120 = (items, artist) => items.map(([t, art]) => `<button class="card120${artist ? ' artist' : ''}">${art}<b>${t}</b>${artist ? '<span>& similar artists</span>' : ''}</button>`).join('');
+
+function controlHTML(state) {
+  if (VARIANT === 'e2' || VARIANT === 'fix2') {
+    return `<div class="seg${VARIANT === 'fix2' ? ' fix' : ''}" data-ctrl data-state="${state}"><div class="track"><span class="pill"></span>
+      <button class="b-discover" data-go="discover" role="tab">Discover</button><button class="b-lite" data-go="lite" role="tab">Lite</button></div></div>`;
+  }
+  if (VARIANT === 'f') {
+    return `<div class="tog" data-ctrl data-state="${state}"><button class="lbl" data-go="discover">Discover</button>
+      <button class="sw" data-go="toggle" role="switch" aria-label="Lite mode"><i></i></button><button class="lbl" data-go="lite">Lite</button></div>`;
+  }
+  return '';
+}
+
+const sec = (title, right, body) => `<section class="sec"><div class="sechead">${title}${right || ''}</div>${body}</section>`;
+const h2 = t => `<h2>${t}</h2>`;
+const editBtn = `<span class="ico" aria-hidden="true">${I.edit}</span>`;
+const chip = (t, ico, after) => `<button class="chip${ico ? ' loc' : ''}">${ico || ''}${t}${after || ''}</button>`;
+
+const adBlock = `<img class="ad" src="img/ad.png" alt="Advertisement">`;
+const dialBlock = sec(h2('Live Radio Dial'), `${chip('New York, NY', I.location)}${chip('All Genres', '', I.chevron)}`,
+  `<div class="row">${dialStations.map(([t, d]) => `<button class="dial"><b>${t}</b><span>${d}</span><span class="play">${I.play}</span></button>`).join('')}</div>
+   <button class="wide">${I.scan}Scan Stations</button>`);
+
+const discover = [
+  controlHTML('discover'),
+  `<img class="banner" src="img/banner.png" alt="iHeartRewind 2026, your year in review">`,
+  sec(`<span class="ico">${I.preset}</span>${h2('Presets')}`, editBtn,
+    `<div class="row"><img class="t56 round" src="img/taylor.png" alt="Taylor Swift Radio"><img class="t56" src="img/z100.png" alt="Z100"><img class="t56" src="img/power.png" alt="Power 105.1"><img class="t56" src="img/wbls.png" alt="107.5 WBLS"><img class="t56" src="img/sysk.png" alt="Stuff You Should Know"></div>`),
+  VARIANT === 'live' ? dialBlock : adBlock,
+  VARIANT === 'live' ? adBlock : dialBlock,
+  sec(h2('Recently Played'), editBtn,
+    `<div class="row"><img class="t66 round" src="img/taylor.png" alt=""><img class="t66" src="img/z100.png" alt=""><img class="t66 round" src="img/recentA.png" alt=""><img class="t66" src="img/recentB.png" alt=""><img class="t66" src="img/wbls.png" alt=""><img class="t66" src="img/sysk.png" alt=""><img class="t66" src="img/power.png" alt=""></div>`),
+  sec(h2('Your Library'), '', `<div class="pills"><button>Stations</button><button>Podcasts</button><button>Playlists</button></div>`),
+  sec(h2('Trending on iHeart'), '', `
+    <button class="trend"><span class="num">1</span><img src="img/taylor.png" alt=""><p>Taylor Swift Radio<small>Taylor Swift and similar artists</small></p></button>
+    <button class="trend"><span class="num">2</span><img src="img/sysk.png" alt=""><p>Stuff You Should Know<small>Selects: Gobble Gobble: Turkeys!</small></p></button>
+    <button class="trend"><span class="num">3</span><img src="img/z100.png" alt=""><p>Z100<small>New York's #1 Hit Music Station</small></p></button>
+    <button class="wide ink">Show All</button>`),
+  sec(h2('Top Podcasts'), chip('All Categories', '', I.chevron), `<div class="row">${card120(podcasts)}</div>`),
+  sec(h2('Top Playlists'), chip('All Genres', '', I.chevron), `<div class="row">${card120(playlists)}</div>`),
+  sec(h2('Top Artist Radio'), chip('All Genres', '', I.chevron), `<div class="row">${card120(artists, true)}</div>`)
+].join('');
+document.getElementById('discoverCol').innerHTML = discover;
+
+const tileSets = {
+  presets: [['Taylor Swift Radio', '<img class="round" src="img/taylor.png" alt="">', true], ['Z100', '<img src="img/z100.png" alt="">'], ['Power 105.1', '<img src="img/power.png" alt="">'], ['107.5 WBLS', '<img src="img/wbls.png" alt="">'], ['Stuff You Should Know', '<img src="img/sysk.png" alt="">']],
+  recent: [['Taylor Swift Radio', '<img class="round" src="img/taylor.png" alt="">', true], ['Z100', '<img src="img/z100.png" alt="">'], ['Jonas Brothers Radio', '<img class="round" src="img/recentB.png" alt="">'], ['Stuff You Should Know', '<img src="img/sysk.png" alt="">'], ['107.5 WBLS', '<img src="img/wbls.png" alt="">']],
+  local: [['106.7 Lite FM', img('st_litefm.png')], ['Z100', '<img src="img/z100.png" alt="">'], ['103.5 KTU', img('st_ktu.png')], ['Power 105.1', '<img src="img/power.png" alt="">'], ['107.5 WBLS', '<img src="img/wbls.png" alt="">']]
+};
+const tiles = key => tileSets[key].map(([t, art, now]) => `<button class="tile108${now ? ' now' : ''}">${art}<b>${t}</b></button>`).join('') + (key === 'presets' ? `<button class="tile108"><span class="addtile">${I.plus}</span><b>Add</b></button>` : '');
+
+document.getElementById('liteCol').innerHTML = `
+  <div class="sheet">
+    ${controlHTML('lite')}
+    ${VARIANT === 'live' ? '<div style="height:4px"></div>' : ''}
+    <img class="art" src="img/nowplaying.jpg" alt="hate that i made you love me, Ariana Grande">
+    <div class="meta"><div><h3>hate that i made you love me</h3><p>Ariana Grande</p></div>
+      <button class="thumb" data-thumb aria-label="Thumb down">${I.thumbDown}</button><button class="thumb" data-thumb aria-label="Thumb up">${I.thumbUp}</button></div>
+    <div class="scrub"><span id="tNow">00:49</span><span class="bar"><i id="bar"></i></span><span>03:17</span></div>
+    <div class="ctrls"><button aria-label="Add to playlist">${I.savePlaylist}</button><button class="big" data-pp aria-label="Pause"></button><button aria-label="Skip">${I.skip}</button></div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="presets">Presets</button>
+    <button role="tab" aria-selected="false" data-tab="recent">Recently Played</button>
+    <button role="tab" aria-selected="false" data-tab="local">Local Radio</button>
+  </div>
+  <div class="row" id="tiles" style="margin:8px 0 24px;padding:4px 16px 8px">${tiles('presets')}</div>`;
+
+/* Switching between Discover and Lite */
+const device = document.getElementById('device');
+const views = { discover: document.getElementById('v-discover'), lite: document.getElementById('v-lite') };
+const liveToggle = document.getElementById('liveToggle');
+let view = 'discover';
+if (VARIANT === 'live') liveToggle.hidden = false;
+
+function go(next) {
+  if (next === 'toggle') next = view === 'discover' ? 'lite' : 'discover';
+  if (next === view) return;
+  const prev = view; view = next;
+  const target = views[next];
+  const ctrl = target.querySelector('[data-ctrl]');
+  if (ctrl) { ctrl.classList.add('noanim'); ctrl.dataset.state = prev; }
+  views[prev].hidden = true;
+  target.hidden = false;
+  device.dataset.view = next;
+  liveToggle.setAttribute('aria-checked', String(next === 'lite'));
+  if (ctrl) { void ctrl.offsetWidth; ctrl.classList.remove('noanim'); requestAnimationFrame(() => { ctrl.dataset.state = next; }); }
+  try { history.replaceState(null, '', '#' + next); } catch (e) {}
+}
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  if (e.target.closest('#liveToggle')) { go('toggle'); return; }
+  const tab = e.target.closest('[data-tab]');
+  if (tab) {
+    document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', String(b === tab)));
+    const row = document.getElementById('tiles'); row.innerHTML = tiles(tab.dataset.tab); row.scrollLeft = 0; return;
+  }
+  const th = e.target.closest('[data-thumb]');
+  if (th) { const on = !th.classList.contains('on'); document.querySelectorAll('[data-thumb]').forEach(b => b.classList.remove('on')); th.classList.toggle('on', on); return; }
+  if (e.target.closest('[data-pp]')) { playing = !playing; renderPP(); }
+});
+if (location.hash === '#lite') go('lite');
+
+/* Playback: shared between the mini player and the Lite player */
+let playing = true, pos = 49; const dur = 197;
+const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+function renderPP() {
+  document.querySelectorAll('[data-pp]').forEach(b => { b.innerHTML = playing ? I.pause : I.playArrow; b.setAttribute('aria-label', playing ? 'Pause' : 'Play'); });
+}
+function renderPos() {
+  document.getElementById('tNow').textContent = fmt(pos);
+  const pct = (pos / dur * 100).toFixed(2) + '%';
+  document.getElementById('bar').style.width = pct;
+  document.querySelector('.mini .prog').style.width = pct;
+}
+renderPP(); renderPos();
+setInterval(() => { if (playing) { pos = pos >= dur ? 0 : pos + 1; renderPos(); } }, 1000);
+</script>
