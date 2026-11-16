@@ -283,6 +283,10 @@ img { display: block; max-width: 100%; }
      under the real one, filling the top safe area with the header color like the app does. */
   html, body { background: var(--page); }
   html[data-view="lite"], html[data-view="lite"] body { background: var(--sheet); }
+  /* iOS Safari only paints its top bar solid when a fixed element touches the top edge; otherwise it fades.
+     This fixed strip covers the status bar area in the header color for the current view. */
+  body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: env(safe-area-inset-top, 0px); background: var(--page); z-index: 10; pointer-events: none; }
+  html[data-view="lite"] body::before { background: var(--sheet); }
   .status { display: none; }
   .top { padding-top: env(safe-area-inset-top, 0px); }
   .bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
