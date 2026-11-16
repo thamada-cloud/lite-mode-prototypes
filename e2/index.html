@@ -220,8 +220,12 @@ img { display: block; max-width: 100%; }
    area, so negative margins cancel the invisible padding around the visible track. */
 .v-e2 .seg, .v-fix2 .seg { margin-block: -6px; }
 .v-fix2 .seg.fix { margin-block: -4px; }
-.v-e2 #discoverCol, .v-fix2 #discoverCol, .v-f #discoverCol { padding-top: 20px; }
-.v-e2 .sheet, .v-fix2 .sheet, .v-f .sheet { padding-top: 20px; }
+.v-e2 #discoverCol, .v-fix2 #discoverCol, .v-f #discoverCol, .v-f3 #discoverCol { padding-top: 20px; }
+.v-e2 .sheet, .v-fix2 .sheet, .v-f .sheet, .v-f3 .sheet { padding-top: 20px; }
+
+/* Option F3, equal halves: no gaps, each label fills its half of the pill and is centered in it, switch in the middle */
+.tog.halves { gap: 0; padding: 0 6px; justify-content: stretch; }
+.tog.halves .lbl { flex: 1; text-align: center; padding: 13px 0; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -330,8 +334,8 @@ function controlHTML(state) {
     return `<div class="seg${VARIANT === 'fix2' ? ' fix' : ''}" data-ctrl data-state="${state}"><div class="track"><span class="pill"></span>
       <button class="b-discover" data-go="discover" role="tab">Discover</button><button class="b-lite" data-go="lite" role="tab">Lite</button></div></div>`;
   }
-  if (VARIANT === 'f') {
-    return `<div class="tog" data-ctrl data-state="${state}"><button class="lbl" data-go="discover">Discover</button>
+  if (VARIANT === 'f' || VARIANT === 'f3') {
+    return `<div class="tog${VARIANT === 'f3' ? ' halves' : ''}" data-ctrl data-state="${state}"><button class="lbl" data-go="discover">Discover</button>
       <button class="sw" data-go="toggle" role="switch" aria-label="Lite mode"><i></i></button><button class="lbl" data-go="lite">Lite</button></div>`;
   }
   return '';

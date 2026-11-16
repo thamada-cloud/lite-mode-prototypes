@@ -8,6 +8,7 @@ V = {
  'e2':   ('Lite Mode Option E2', 'Option E2 · Segmented · Inset 4', 'Tap Discover or Lite to switch'),
  'fix2': ('Lite Mode Fix 2', 'Fix 2 · Segmented · Recessed track', 'Tap Discover or Lite to switch'),
  'f':    ('Lite Mode Option F', 'Option F · Discover | switch | Lite', 'Tap the switch or a label'),
+ 'f3':   ('Lite Mode Option F3', 'Option F3 · Discover | switch | Lite · Equal halves', 'Tap the switch or either half'),
 }
 META = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="robots" content="noindex, nofollow">\n'
 for k, (title, name, hint) in V.items():
