@@ -128,11 +128,13 @@ img { display: block; max-width: 100%; }
 .wide.ink { color: var(--ink); width: auto; padding: 0 20px; align-self: center; }
 .pills { display: flex; gap: 8px; }
 .pills button { height: 36px; padding: 0 16px; border-radius: 999px; background: var(--sheet); font-size: 14px; font-weight: 600; box-shadow: 0 1px 2px rgba(39,41,45,.06); }
-.trend { display: grid; grid-template-columns: 40px 56px 1fr; gap: 12px; align-items: center; text-align: left; }
-.trend .num { width: 40px; height: 40px; border-radius: 50%; background: var(--sheet); display: grid; place-items: center; font-weight: 700; font-size: 16px; color: var(--brand); }
-.trend img, .trend .cover { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; }
-.trend p { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
-.trend small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.trendlist { display: flex; flex-direction: column; gap: 8px; }
+.trend { display: grid; grid-template-columns: 40px 1fr; align-items: center; text-align: left; width: 100%; }
+.trend .num { font-size: 50px; font-weight: 800; line-height: 40px; height: 40px; color: transparent; -webkit-text-stroke: 1.5px var(--brand); letter-spacing: -.03em; overflow: visible; }
+.trend .card { display: flex; align-items: center; gap: 8px; height: 56px; background: var(--sheet); border-radius: 6px; overflow: hidden; min-width: 0; }
+.trend .card img { width: 56px; height: 56px; flex: none; object-fit: cover; }
+.trend p { margin: 0; padding-right: 12px; font-size: 14px; font-weight: 600; line-height: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.wide.link { height: 32px; color: var(--link); }
 .card120 { width: 120px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
 .card120 img, .card120 .cover { width: 120px; height: 120px; border-radius: 6px; object-fit: cover; }
 .card120.artist img, .card120.artist .cover { border-radius: 50%; }
@@ -314,10 +316,8 @@ const discover = [
     `<div class="row"><img class="t66 round" src="img/taylor.png" alt=""><img class="t66" src="img/z100.png" alt=""><img class="t66 round" src="img/recentA.png" alt=""><img class="t66" src="img/recentB.png" alt=""><img class="t66" src="img/wbls.png" alt=""><img class="t66" src="img/sysk.png" alt=""><img class="t66" src="img/power.png" alt=""></div>`),
   sec(h2('Your Library'), '', `<div class="pills"><button>Stations</button><button>Podcasts</button><button>Playlists</button></div>`),
   sec(h2('Trending on iHeart'), '', `
-    <button class="trend"><span class="num">1</span><img src="img/taylor.png" alt=""><p>Taylor Swift Radio<small>Taylor Swift and similar artists</small></p></button>
-    <button class="trend"><span class="num">2</span><img src="img/sysk.png" alt=""><p>Stuff You Should Know<small>Selects: Gobble Gobble: Turkeys!</small></p></button>
-    <button class="trend"><span class="num">3</span><img src="img/z100.png" alt=""><p>Z100<small>New York's #1 Hit Music Station</small></p></button>
-    <button class="wide ink">Show All</button>`),
+    <div class="trendlist"><button class="trend"><span class="num">1</span><span class="card"><img src="img/trend1.jpg" alt=""><p>Check Out The 2027 Grammy Nominations: LISTEN HERE</p></span></button><button class="trend"><span class="num">2</span><span class="card"><img src="img/trend2.jpg" alt=""><p>Replay The Soundtrack Of Your Year: iHeart Rewind 2026</p></span></button><button class="trend"><span class="num">3</span><span class="card"><img src="img/trend3.jpg" alt=""><p>Win A Disney Trip a Day Holiday Flyaway!</p></span></button></div>
+    <button class="wide link">Show All</button>`),
   sec(h2('Top Podcasts'), chip('All Categories', '', I.chevron), `<div class="row">${card120(podcasts)}</div>`),
   sec(h2('Top Playlists'), chip('All Genres', '', I.chevron), `<div class="row">${card120(playlists)}</div>`),
   sec(h2('Top Artist Radio'), chip('All Genres', '', I.chevron), `<div class="row">${card120(artists, true)}</div>`)
