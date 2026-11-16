@@ -215,6 +215,14 @@ img { display: block; max-width: 100%; }
 .v-live #discoverCol { padding-top: 20px; }
 .v-live .sheet { padding-top: 12px; }
 
+/* Options with a control: the visible control starts 20pt below the header, matching production's first
+   item, then the standard 16pt section gap to the content below. The segmented controls keep their 48pt tap
+   area, so negative margins cancel the invisible padding around the visible track. */
+.v-e2 .seg, .v-fix2 .seg { margin-block: -6px; }
+.v-fix2 .seg.fix { margin-block: -4px; }
+.v-e2 #discoverCol, .v-fix2 #discoverCol, .v-f #discoverCol { padding-top: 20px; }
+.v-e2 .sheet, .v-fix2 .sheet, .v-f .sheet { padding-top: 20px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
