@@ -414,7 +414,7 @@ const dialBlock = sec(h2('Live Radio Dial'), `${chip('New York, NY', I.location)
 
 const discover = [
   controlHTML('discover'),
-  `<img class="banner" src="img/banner.png" alt="iHeartRewind 2026, your year in review">`,
+  `<img class="banner" src="img/banner.png?v=2" alt="iHeartRewind 2026, your year in review">`,
   sec(`<span class="ico">${I.preset}</span>${h2('Presets')}`, editBtn,
     `<div class="row"><img class="t56 round" src="img/taylor.jpg" alt="Taylor Swift Radio"><img class="t56" src="img/z100.png" alt="Z100"><img class="t56" src="img/power.png" alt="Power 105.1"><img class="t56" src="img/wbls.png" alt="107.5 WBLS"><img class="t56" src="img/sysk.jpg" alt="Stuff You Should Know">${emptyPresets(5, 56)}</div>`),
   VARIANT === 'live' ? dialBlock : adBlock,
