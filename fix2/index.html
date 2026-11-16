@@ -225,8 +225,10 @@ img { display: block; max-width: 100%; }
 .ctrls .big { width: 56px; height: 56px; border-radius: 50%; background: var(--fab-bg); color: var(--fab-fg); display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 .tabs { display: flex; justify-content: space-between; padding: 8px 16px 0; }
 .tabs button { font-size: 16px; font-weight: 600; padding: 10px 6px 12px; color: var(--ink); position: relative; }
-.tabs button[aria-selected="false"] { color: var(--desc); font-weight: 500; }
-.tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 4px; height: 2px; background: var(--brand); border-radius: 2px; }
+/* Lite content tabs per production NewAppSlidingTabCollectionView: every title grey600 (white in dark), semibold 16;
+   only the underline marks the selected tab (red600 light, red300 dark) */
+.tabs button[aria-selected="false"] { color: var(--ink); font-weight: 600; }
+.tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 4px; height: 2px; background: var(--accent); border-radius: 2px; }
 .tile108 { width: 108px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 /* Lite tiles use production's cardBackground behind station art (white light, #27292C dark), per FocusModeCarouselCell */
 .tile108 img, .tile108 .cover { width: 108px; height: 108px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
