@@ -5,6 +5,7 @@
 <title>Lite Mode Prototypes</title>
 <style>
 :root { --bg:#f6f8f9; --ink:#27292d; --ink2:#3f4447; --brand:#c6002b; --card:#fff; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --bg:#000; --ink:#fff; --ink2:#e6eaed; --brand:#f4747c; --card:#27292d; color-scheme: dark; } }
 body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif; padding:48px max(16px, env(safe-area-inset-left,0px)); }
 main { max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
 h1 { font-size:28px; margin:0; } p { margin:0 0 12px; color:var(--ink2); line-height:1.5; }
