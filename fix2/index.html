@@ -210,6 +210,11 @@ img { display: block; max-width: 100%; }
 .trend .num svg { filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.12)); }
 .sheet { box-shadow: 0 3px 5px rgba(0,0,0,.12); }
 
+/* Live today spacing, measured from the production screenshots: Rewind banner starts 20pt below the
+   header, and the Lite album art starts 12pt below it (there is no control in between). */
+.v-live #discoverCol { padding-top: 20px; }
+.v-live .sheet { padding-top: 12px; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -364,7 +369,6 @@ const tiles = key => tileSets[key].map(([t, art, now]) => `<button class="tile10
 document.getElementById('liteCol').innerHTML = `
   <div class="sheet">
     ${controlHTML('lite')}
-    ${VARIANT === 'live' ? '<div style="height:4px"></div>' : ''}
     <img class="art" src="img/nowplaying.jpg" alt="hate that i made you love me, Ariana Grande">
     <div class="meta"><div><h3>hate that i made you love me</h3><p>Ariana Grande</p></div>
       <button class="thumb" data-thumb aria-label="Thumb down">${I.thumbDown}</button><button class="thumb" data-thumb aria-label="Thumb up">${I.thumbUp}</button></div>
@@ -384,6 +388,7 @@ const views = { discover: document.getElementById('v-discover'), lite: document.
 const liveToggle = document.getElementById('liveToggle');
 let view = 'discover';
 if (VARIANT === 'live') liveToggle.hidden = false;
+device.classList.add('v-' + VARIANT);
 
 function go(next) {
   if (next === 'toggle') next = view === 'discover' ? 'lite' : 'discover';
