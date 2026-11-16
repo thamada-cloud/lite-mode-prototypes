@@ -13,7 +13,10 @@
   --muted: #717276;
   --track: #e6eaed;
   --edge: #a9afb2;
-  --link: #0055b7;
+  --link: #0054b7;          /* blue600 */
+  --section-title: #3e4446; /* sectionTitle, grey500 */
+  --desc: #707177;          /* listItemDescription, grey400 */
+  --preset-bg: #ffffff;     /* presetCellBackground */
   --ios-off: rgba(120,120,128,.16);
   --ios-on: #34c759;
   --accent: #c6002b;        /* on_surface/brand */
@@ -44,7 +47,10 @@
     --muted: #717276;
     --track: #3f4447;       /* container/tertiary */
     --edge: #717277;        /* container/secondary */
-    --link: #51b2ea;        /* on_surface/informative */
+    --link: #75c7f7;
+    --section-title: #e6eaec;
+    --desc: #a9aeb1;
+    --preset-bg: #3e4446;
     --ios-off: rgba(120,120,128,.32);
     --accent: #f4747c;
     --emphasis: #f4747c;
@@ -152,18 +158,18 @@ img { display: block; max-width: 100%; }
 .sec { display: flex; flex-direction: column; gap: 12px; }
 .sechead { display: flex; align-items: center; gap: 8px; min-height: 32px; }
 .sechead { flex-wrap: wrap; }
-.sechead h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1; letter-spacing: -.01em; white-space: nowrap; }
+.sechead h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1; letter-spacing: -.01em; white-space: nowrap; color: var(--section-title); }
 .sechead .ico { color: var(--ink); display: flex; }
 .chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: 999px; background: var(--sheet); color: var(--link); font-size: 12px; font-weight: 600; box-shadow: 0 1px 2px rgba(39,41,45,.06); white-space: nowrap; }
 .row { display: flex; gap: 12px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 4px; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding-inline: 16px; }
 .row::-webkit-scrollbar { display: none; }
 .row > * { flex: none; scroll-snap-align: start; }
-.t56 { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
+.t56 { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; background: var(--preset-bg); }
 .t66 { width: 66px; height: 66px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
 .round { border-radius: 50%; }
 .dial { width: 142px; min-height: 76px; background: var(--sheet); border-radius: 8px; padding: 10px 8px 8px; display: flex; flex-direction: column; gap: 2px; position: relative; text-align: left; box-shadow: 0 1px 2px rgba(39,41,45,.06); }
 .dial b { font-size: 14px; font-weight: 600; }
-.dial span { font-size: 12px; color: var(--ink-2); padding-right: 28px; line-height: 1.3; }
+.dial span { font-size: 12px; color: var(--desc); padding-right: 28px; line-height: 1.3; }
 .dial .play { position: absolute; right: 8px; bottom: 8px; padding: 0; display: flex; }
 .wide { height: 36px; border-radius: 999px; background: var(--sheet); display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--accent); box-shadow: 0 1px 2px rgba(39,41,45,.06); width: 100%; }
 .wide.ink { color: var(--ink); width: auto; padding: 0 20px; align-self: center; }
@@ -207,10 +213,10 @@ img { display: block; max-width: 100%; }
 .ctrls .big { width: 56px; height: 56px; border-radius: 50%; background: var(--fab-bg); color: var(--fab-fg); display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 .tabs { display: flex; justify-content: space-between; padding: 8px 16px 0; }
 .tabs button { font-size: 16px; font-weight: 600; padding: 10px 6px 12px; color: var(--ink); position: relative; }
-.tabs button[aria-selected="false"] { color: var(--ink-2); font-weight: 500; }
+.tabs button[aria-selected="false"] { color: var(--desc); font-weight: 500; }
 .tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 4px; height: 2px; background: var(--brand); border-radius: 2px; }
 .tile108 { width: 108px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-.tile108 img, .tile108 .cover { width: 108px; height: 108px; border-radius: 6px; object-fit: cover; background: var(--sheet); }
+.tile108 img, .tile108 .cover { width: 108px; height: 108px; border-radius: 6px; object-fit: cover; background: var(--preset-bg); }
 .tile108 .round { border-radius: 50%; }
 .tile108 b { font-size: 14px; font-weight: 600; line-height: 1.25; }
 .tile108.now b { color: var(--accent); }
