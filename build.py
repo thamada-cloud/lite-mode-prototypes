@@ -13,7 +13,7 @@ V = {
 }
 # Earlier links that were already shared keep working and forward to the new ones
 REDIRECTS = {'live': 'version-a', 'e2': 'version-b', 'f3': 'version-c'}
-META = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="robots" content="noindex, nofollow">\n<meta name="theme-color" content="#f6f8f9" media="(prefers-color-scheme: light)">\n<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">\n'
+META = '<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="robots" content="noindex, nofollow">\n<meta name="theme-color" content="#f6f8f9" media="(prefers-color-scheme: light)">\n<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'
 for folder, (variant, title, name, hint) in V.items():
     sub = lambda s: s.replace('__TITLE__', title).replace('__NAME__', name).replace('__HINT__', hint).replace('__VARIANT__', variant)
     os.makedirs(folder, exist_ok=True)
