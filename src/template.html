@@ -271,7 +271,8 @@ img { display: block; max-width: 100%; }
 @media (max-width: 480px) {
   /* On a real phone the system status bar is already there, so drop the mock one and let the header sit
      under the real one, filling the top safe area with the header color like the app does. */
-  html { background: var(--page); }
+  html, body { background: var(--page); }
+  html[data-view="lite"], html[data-view="lite"] body { background: var(--sheet); }
   .status { display: none; }
   .top { padding-top: env(safe-area-inset-top, 0px); }
   .bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -461,6 +462,7 @@ function go(next) {
   views[prev].hidden = true;
   target.hidden = false;
   device.dataset.view = next;
+  if (typeof syncThemeColor === 'function') syncThemeColor();
   liveToggle.setAttribute('aria-checked', String(next === 'lite'));
   if (ctrl) { void ctrl.offsetWidth; ctrl.classList.remove('noanim'); requestAnimationFrame(() => { ctrl.dataset.state = next; }); }
   try { history.replaceState(null, '', location.pathname + '#' + next); } catch (e) {}
@@ -480,13 +482,12 @@ document.addEventListener('click', e => {
 if (location.hash === '#lite') go('lite');
 /* Keep Safari's top bar tint matched to the header color (page color on Discover, sheet color on Lite) in either theme */
 function syncThemeColor() {
-  setTimeout(() => {
-    const c = getComputedStyle(document.querySelector('.top')).backgroundColor;
-    document.querySelectorAll('meta[name="theme-color"]').forEach(m => { m.content = c; });
-  }, 260);
+  // Header color for the current view: page color on Discover, sheet color on Lite (follows light or dark)
+  document.documentElement.dataset.view = view;
+  const c = getComputedStyle(document.documentElement).getPropertyValue(view === 'lite' ? '--sheet' : '--page').trim();
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => { m.content = c; });
 }
 syncThemeColor();
-document.querySelector('.top').addEventListener('transitionend', syncThemeColor);
 document.addEventListener('click', e => { if (e.target.closest('[data-go], #liveToggle')) syncThemeColor(); });
 try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncThemeColor); } catch (e) {}
 
