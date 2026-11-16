@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f6f8f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <base href="../">
 <title>Lite Mode Version B</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,7 +94,6 @@ img { display: block; max-width: 100%; }
   .stage { padding-block: 0; gap: 0; }
   .label { display: none; }
   .device { width: 100%; max-height: none; border-radius: 0; box-shadow: none; margin-block: 0; }
-  .status { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
 }
 @media (max-width: 400px) {
   .device .sechead { gap: 6px; }
@@ -260,6 +261,16 @@ img { display: block; max-width: 100%; }
 /* Option F3, equal halves: no gaps, each label fills its half of the pill and is centered in it, switch in the middle */
 .tog.halves { gap: 0; padding: 0 6px; justify-content: stretch; }
 .tog.halves .lbl { flex: 1; text-align: center; padding: 13px 0; }
+
+@media (max-width: 480px) {
+  /* On a real phone the system status bar is already there, so drop the mock one and let the header sit
+     under the real one, filling the top safe area with the header color like the app does. */
+  html { background: var(--page); }
+  .status { display: none; }
+  .top { padding-top: env(safe-area-inset-top, 0px); }
+  .bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .homebar { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -463,6 +474,17 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-pp]')) { playing = !playing; renderPP(); }
 });
 if (location.hash === '#lite') go('lite');
+/* Keep Safari's top bar tint matched to the header color (page color on Discover, sheet color on Lite) in either theme */
+function syncThemeColor() {
+  setTimeout(() => {
+    const c = getComputedStyle(document.querySelector('.top')).backgroundColor;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => { m.content = c; });
+  }, 260);
+}
+syncThemeColor();
+document.querySelector('.top').addEventListener('transitionend', syncThemeColor);
+document.addEventListener('click', e => { if (e.target.closest('[data-go], #liveToggle')) syncThemeColor(); });
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncThemeColor); } catch (e) {}
 
 /* Playback: shared between the mini player and the Lite player */
 let playing = true, pos = 49; const dur = 197;
