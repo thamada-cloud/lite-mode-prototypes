@@ -28,7 +28,7 @@ for old, new in REDIRECTS.items():
 <script>location.replace('../{new}/' + location.hash);</script>
 </head><body><p>This prototype moved to <a href="../{new}/">{V[new][2]}</a>.</p></body></html>
 ''')
-QUICK = [('version-b','Lite','b'),('version-b','Simple','d'),('version-b','Focus','g'),('version-b','Focus','r'),('version-c','Lite','b'),('version-c','Simple','d'),('version-c','Focus','g'),('version-c','Focus','r')]
+QUICK = [('version-b','Lite','b'),('version-b','Simple','d'),('version-b','Focus','g'),('version-c','Lite','b'),('version-c','Simple','d'),('version-c','Focus','g')]
 quick = ''.join(f'<a href="{v}/?name={n}&amp;icon={i}"><b>{V[v][1].replace("Lite Mode ","")} · {n} + {i.upper()}</b></a>' for v, n, i in QUICK)
 cards = ''.join(f'<a href="{f}/"><b>{n}</b><span>{h}</span></a>' for f, (_, _, n, h) in V.items())
 open('index.html', 'w').write(f'''<!doctype html>
@@ -55,11 +55,11 @@ form button {{ background:var(--brand); color:#fff; border:0; font-weight:600; p
 <p>Home screen with Discover and Lite. Each prototype has the same content; only the control that switches between the two views changes. Scroll each view and tap the control to switch.</p>
 {cards}
 <h2>Names and icons</h2>
-<p>Try the shortlisted entry icons and names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
+<p>Try the shortlisted entry icons (B, D and G) with different names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
 <form id="pick">
 <label>Prototype <select name="v"><option value="version-b">Version B</option><option value="version-c">Version C</option><option value="version-a">Version A</option></select></label>
 <label>Name <select name="name"><option>Lite</option><option>Simple</option><option>Focus</option><option>Essentials</option><option>Favorites</option><option>Quick Play</option></select></label>
-<label>Icon <select name="icon"><option value="b">B Player</option><option value="d">D Simple screen</option><option value="o">O D minimal</option><option value="g">G Focus frame</option><option value="r">R Tile in focus</option><option value="">No icon</option></select></label>
+<label>Icon <select name="icon"><option value="b">B Player</option><option value="d">D Simple screen</option><option value="g">G Focus frame</option><option value="">No icon</option></select></label>
 <button type="submit">Open</button>
 </form>
 <div class="quick">{quick}</div>

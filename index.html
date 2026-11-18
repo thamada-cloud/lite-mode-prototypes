@@ -30,14 +30,14 @@ form button { background:var(--brand); color:#fff; border:0; font-weight:600; pa
 <p>Home screen with Discover and Lite. Each prototype has the same content; only the control that switches between the two views changes. Scroll each view and tap the control to switch.</p>
 <a href="version-a/"><b>Version A · Live today</b><span>Tap the Lite switch in the header</span></a><a href="version-b/"><b>Version B · Segmented control</b><span>Tap Discover or Lite to switch</span></a><a href="version-c/"><b>Version C · Discover | switch | Lite</b><span>Tap the switch or either half</span></a><a href="fix2/"><b>Fix 2 · Segmented · Recessed track</b><span>Tap Discover or Lite to switch</span></a><a href="f/"><b>Option F · Discover | switch | Lite</b><span>Tap the switch or a label</span></a>
 <h2>Names and icons</h2>
-<p>Try the shortlisted entry icons and names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
+<p>Try the shortlisted entry icons (B, D and G) with different names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
 <form id="pick">
 <label>Prototype <select name="v"><option value="version-b">Version B</option><option value="version-c">Version C</option><option value="version-a">Version A</option></select></label>
 <label>Name <select name="name"><option>Lite</option><option>Simple</option><option>Focus</option><option>Essentials</option><option>Favorites</option><option>Quick Play</option></select></label>
-<label>Icon <select name="icon"><option value="b">B Player</option><option value="d">D Simple screen</option><option value="o">O D minimal</option><option value="g">G Focus frame</option><option value="r">R Tile in focus</option><option value="">No icon</option></select></label>
+<label>Icon <select name="icon"><option value="b">B Player</option><option value="d">D Simple screen</option><option value="g">G Focus frame</option><option value="">No icon</option></select></label>
 <button type="submit">Open</button>
 </form>
-<div class="quick"><a href="version-b/?name=Lite&amp;icon=b"><b>Version B · Lite + B</b></a><a href="version-b/?name=Simple&amp;icon=d"><b>Version B · Simple + D</b></a><a href="version-b/?name=Focus&amp;icon=g"><b>Version B · Focus + G</b></a><a href="version-b/?name=Focus&amp;icon=r"><b>Version B · Focus + R</b></a><a href="version-c/?name=Lite&amp;icon=b"><b>Version C · Lite + B</b></a><a href="version-c/?name=Simple&amp;icon=d"><b>Version C · Simple + D</b></a><a href="version-c/?name=Focus&amp;icon=g"><b>Version C · Focus + G</b></a><a href="version-c/?name=Focus&amp;icon=r"><b>Version C · Focus + R</b></a></div>
+<div class="quick"><a href="version-b/?name=Lite&amp;icon=b"><b>Version B · Lite + B</b></a><a href="version-b/?name=Simple&amp;icon=d"><b>Version B · Simple + D</b></a><a href="version-b/?name=Focus&amp;icon=g"><b>Version B · Focus + G</b></a><a href="version-c/?name=Lite&amp;icon=b"><b>Version C · Lite + B</b></a><a href="version-c/?name=Simple&amp;icon=d"><b>Version C · Simple + D</b></a><a href="version-c/?name=Focus&amp;icon=g"><b>Version C · Focus + G</b></a></div>
 <script>
 document.getElementById('pick').addEventListener('submit', e => {
   e.preventDefault(); const f = new FormData(e.target);
