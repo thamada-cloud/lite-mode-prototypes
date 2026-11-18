@@ -28,6 +28,8 @@ for old, new in REDIRECTS.items():
 <script>location.replace('../{new}/' + location.hash);</script>
 </head><body><p>This prototype moved to <a href="../{new}/">{V[new][2]}</a>.</p></body></html>
 ''')
+QUICK = [('version-b','Lite','b'),('version-b','Simple','d'),('version-b','Focus','g'),('version-b','Focus','r'),('version-c','Lite','b'),('version-c','Simple','d'),('version-c','Focus','g'),('version-c','Focus','r')]
+quick = ''.join(f'<a href="{v}/?name={n}&amp;icon={i}"><b>{V[v][1].replace("Lite Mode ","")} · {n} + {i.upper()}</b></a>' for v, n, i in QUICK)
 cards = ''.join(f'<a href="{f}/"><b>{n}</b><span>{h}</span></a>' for f, (_, _, n, h) in V.items())
 open('index.html', 'w').write(f'''<!doctype html>
 <html lang="en"><head>{META}<title>Lite Mode Prototypes</title>
@@ -40,9 +42,34 @@ h1 {{ font-size:28px; margin:0; }} p {{ margin:0 0 12px; color:var(--ink2); line
 a {{ display:flex; flex-direction:column; gap:4px; padding:16px 18px; background:var(--card); border-radius:12px; text-decoration:none; color:inherit; box-shadow:0 1px 2px rgba(39,41,45,.08); }}
 a:hover, a:focus-visible {{ outline:2px solid var(--brand); }}
 a span {{ font-size:14px; color:var(--ink2); }}
+h2 {{ font-size:20px; margin:24px 0 0; }}
+form {{ display:flex; flex-wrap:wrap; gap:10px 14px; align-items:end; padding:16px 18px; background:var(--card); border-radius:12px; }}
+label {{ display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--ink2); }}
+select, form button {{ font:inherit; font-size:15px; padding:8px 10px; border-radius:8px; border:1px solid rgba(128,128,128,.4); background:var(--bg); color:var(--ink); }}
+form button {{ background:var(--brand); color:#fff; border:0; font-weight:600; padding:9px 18px; }}
+.quick {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }}
+.quick a {{ padding:12px 14px; }}
+.quick b {{ font-size:14px; font-weight:600; }}
 </style></head>
 <body><main><h1>Lite Mode prototypes</h1>
 <p>Home screen with Discover and Lite. Each prototype has the same content; only the control that switches between the two views changes. Scroll each view and tap the control to switch.</p>
-{cards}</main></body></html>
+{cards}
+<h2>Names and icons</h2>
+<p>Try the shortlisted entry icons and names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
+<form id="pick">
+<label>Prototype <select name="v"><option value="version-b">Version B</option><option value="version-c">Version C</option><option value="version-a">Version A</option></select></label>
+<label>Name <select name="name"><option>Lite</option><option>Simple</option><option>Focus</option><option>Essentials</option><option>Favorites</option><option>Quick Play</option></select></label>
+<label>Icon <select name="icon"><option value="b">B Player</option><option value="d">D Simple screen</option><option value="o">O D minimal</option><option value="g">G Focus frame</option><option value="r">R Tile in focus</option><option value="">No icon</option></select></label>
+<button type="submit">Open</button>
+</form>
+<div class="quick">{quick}</div>
+<script>
+document.getElementById('pick').addEventListener('submit', e => {{
+  e.preventDefault(); const f = new FormData(e.target);
+  const q = new URLSearchParams({{ name: f.get('name') }}); if (f.get('icon')) q.set('icon', f.get('icon'));
+  location.href = f.get('v') + '/?' + q.toString();
+}});
+</script>
+</main></body></html>
 ''')
 print('built')
