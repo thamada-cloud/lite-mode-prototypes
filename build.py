@@ -55,7 +55,7 @@ form button {{ background:var(--brand); color:#fff; border:0; font-weight:600; p
 <p>Home screen with Discover and Lite. Each prototype has the same content; only the control that switches between the two views changes. Scroll each view and tap the control to switch.</p>
 {cards}
 <h2>Names and icons</h2>
-<p>Try the shortlisted entry icons (B, D and G) with different names inside a prototype. Letters match the Custom icons board in Figma. The icon is outlined when off and filled when Lite is on.</p>
+<p>Try the shortlisted entry icons (B, D and G) with different names inside a prototype. Letters match the Custom icons board in Figma. D is outlined when off and fills in when Lite is on. G has a filled play.</p>
 <form id="pick">
 <label>Prototype <select name="v"><option value="version-b">Version B</option><option value="version-c">Version C</option><option value="version-a">Version A</option></select></label>
 <label>Name <select name="name"><option>Lite</option><option>Simple</option><option>Focus</option><option>Essentials</option><option>Favorites</option><option>Quick Play</option></select></label>
